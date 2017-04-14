@@ -7,7 +7,7 @@
     tools:context="com.figytuna.projectseveryday.MainActivity">
 
     <Spinner
-        android:id="@+id/spinner2"
+        android:id="@+id/projectSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -15,22 +15,30 @@
         android:layout_alignParentTop="true" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/confirmButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/spinner2"
+        android:layout_below="@+id/projectSpinner"
         android:layout_centerHorizontal="true"
         android:text="Button" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/button"
+        android:layout_below="@+id/confirmButton"
         android:layout_centerHorizontal="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical">
+
+            <TableLayout
+                android:id="@+id/projectListLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </TableLayout>
+        </LinearLayout>
     </ScrollView>
 </RelativeLayout>
