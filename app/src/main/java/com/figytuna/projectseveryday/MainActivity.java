@@ -1,13 +1,11 @@
 package com.figytuna.projectseveryday;
 
-import android.app.NotificationManager;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.app.NotificationCompat;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,6 +13,9 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,32 +34,25 @@ public class MainActivity extends AppCompatActivity {
             addListItem ("List Item #" + i);
         }
 
+        //Test Notification
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Calendar alarm_cal = Calendar.getInstance();
+        alarm_cal.setTime (new Date());
+        alarm_cal.add (Calendar.SECOND, 10);
+
+        Intent alarmIntent = new Intent (this, MissedNotificationReciever.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+
+        alarmManager.set (AlarmManager.RTC_WAKEUP, alarm_cal.getTimeInMillis(), pendingIntent);
+
     }
 
+    @Override
     public boolean onCreateOptionsMenu (Menu menu)
     {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate (R.menu.main_activity_menu, menu);
         return true;
-    }
-
-    private void notifyMissed ()
-    {
-        NotificationCompat.Builder missedNotif = new NotificationCompat.Builder(this);
-        missedNotif.setSmallIcon(R.drawable.ic_stat_name);
-        missedNotif.setContentTitle ("Projects");
-        missedNotif.setContentText ("Notification");
-
-        Intent missedIntent = new Intent (this, MainActivity.class);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(MainActivity.class);
-
-        stackBuilder.addNextIntent(missedIntent);
-        PendingIntent missedPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-        missedNotif.setContentIntent (missedPendingIntent);
-
-        NotificationManager notifManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notifManager.notify (0, missedNotif.build ());
     }
 
     private void addListItem (String title)
