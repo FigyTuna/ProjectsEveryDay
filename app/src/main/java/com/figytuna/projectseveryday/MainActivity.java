@@ -2,10 +2,12 @@ package com.figytuna.projectseveryday;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -61,12 +64,28 @@ public class MainActivity extends AppCompatActivity {
     {
         switch (item.getItemId()) {
             case R.id.chooseTime:
-                //Choose time
+                chooseTime ();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
+    }
+
+    private void chooseTime ()
+    {
+        Calendar current_time = Calendar.getInstance();
+        int hour = current_time.get(Calendar.HOUR_OF_DAY);
+        int minute = current_time.get(Calendar.MINUTE);
+        TimePickerDialog timePicker;
+        timePicker = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                Log.v("Test", "" + selectedHour + ":" + selectedMinute);
+            }
+        }, hour, minute, false);
+        timePicker.setTitle("Select notification time.");
+        timePicker.show();
     }
 
     private void addListItem (String title)
