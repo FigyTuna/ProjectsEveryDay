@@ -74,14 +74,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void chooseTime ()
     {
-        Calendar current_time = Calendar.getInstance();
-        int hour = current_time.get(Calendar.HOUR_OF_DAY);
-        int minute = current_time.get(Calendar.MINUTE);
+        Calendar saved_time = new DatabaseHandler(getApplicationContext()).getNotifTime();
+        int hour = saved_time.get(Calendar.HOUR_OF_DAY);
+        int minute = saved_time.get(Calendar.MINUTE);
         TimePickerDialog timePicker;
         timePicker = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                Log.v("Test", "" + selectedHour + ":" + selectedMinute);
+                new DatabaseHandler(getApplicationContext()).updateNotifTime(selectedMinute, selectedHour);
             }
         }, hour, minute, false);
         timePicker.setTitle("Select notification time.");
