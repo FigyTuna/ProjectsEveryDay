@@ -20,7 +20,9 @@
         <receiver
             android:name=".MissedNotificationReciever"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true" />
+
+        <activity android:name=".ProjectsActivity"></activity>
     </application>
 
 </manifest>

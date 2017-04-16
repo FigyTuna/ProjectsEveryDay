@@ -2,8 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/settings"
+        android:title="Settings"/>
+    <item
         android:id="@+id/chooseTime"
         android:title="Set Notify Time"/>
+    <item
+        android:id="@+id/editProjects"
+        android:title="Edit Projects"/>
     <item
         android:id="@+id/resetDatabase"
         android:title="!! Reset !!"/>

@@ -97,6 +97,18 @@ public class DatabaseHandler {
         return ret;
     }
 
+    public void setNotifEnabled (boolean enabled)
+    {
+        int enabledInt = enabled ? 1 : 0;
+
+        singleValuesTable();
+
+        ContentValues contentValues = new ContentValues ();
+        contentValues.put (NOTIF_COLUMN, enabledInt);
+
+        db.update (SINGLE_VALUE_TABLE, contentValues, ID_COLUMN + " = " + DEFAULT_ID, null);
+    }
+
     public void resetDatabase ()
     {
         db.execSQL("DROP TABLE IF EXISTS " + SINGLE_VALUE_TABLE + ";");

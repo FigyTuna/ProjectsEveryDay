@@ -1,6 +1,7 @@
 package com.figytuna.projectseveryday;
 
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -23,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         projectListLayout = (TableLayout) findViewById(R.id.projectListLayout);
 
@@ -52,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.resetDatabase:
                 new DatabaseHandler(getApplicationContext()).resetDatabase();
+            case R.id.editProjects:
+                Intent nextActivity = new Intent (this, ProjectsActivity.class);
+                startActivity(nextActivity);
             default:
                 return super.onOptionsItemSelected(item);
         }
