@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.util.Calendar;
 
@@ -14,9 +13,13 @@ public class DatabaseHandler {
     private static final String SINGLE_VALUE_TABLE = "single_value_table";
 
     private static final String ID_COLUMN = "id_col";
+    private static final int ID_COL_INDEX = 0;
     private static final String MINUTE_COLUMN = "minute_col";
+    private static final int MINUTE_COL_INDEX = 1;
     private static final String HOUR_COLUMN = "hour_col";
+    private static final int HOUR_COL_INDEX = 2;
     private static final String NOTIF_COLUMN = "notification_col";
+    private static final int NOTIF_COL_INDEX = 3;
 
     private static final int DEFAULT_ID = 1;
     private static final int DEFAULT_MINUTE = 0;
@@ -43,17 +46,14 @@ public class DatabaseHandler {
 
         if (resultSet.getCount () < 1)
         {
-            Log.v ("Reset", "Insert");
             db.execSQL ("INSERT INTO " + SINGLE_VALUE_TABLE + " VALUES(" + DEFAULT_ID + ", "
-                    + DEFAULT_MINUTE + ", " + DEFAULT_HOUR + ", " + 1 + ");");
+                    + DEFAULT_MINUTE + ", " + DEFAULT_HOUR + ", " + 0 + ");");
         }
     }
 
     public void updateNotifTime (int minute, int hour)
     {
         singleValuesTable();
-
-        Log.v ("set", "m: " + minute + " h: " + hour);
 
         ContentValues contentValues = new ContentValues ();
         contentValues.put (MINUTE_COLUMN, minute);
@@ -73,12 +73,28 @@ public class DatabaseHandler {
         resultSet.moveToFirst();
 
         cal.set (Calendar.SECOND, 0);
-        cal.set (Calendar.MINUTE, resultSet.getInt (1));
-        cal.set (Calendar.HOUR_OF_DAY, resultSet.getInt (2));
-
-        Log.v ("get", "m: " + cal.get(Calendar.MINUTE) + " h: " + cal.get(Calendar.HOUR));
+        cal.set (Calendar.MINUTE, resultSet.getInt (MINUTE_COL_INDEX));
+        cal.set (Calendar.HOUR_OF_DAY, resultSet.getInt (HOUR_COL_INDEX));
 
         return cal;
+    }
+
+    public boolean getNotifEnabled ()
+    {
+        singleValuesTable();
+
+        boolean ret = false;
+
+        Cursor resultSet = db.rawQuery ("SELECT * from " + SINGLE_VALUE_TABLE + ";", null);
+
+        resultSet.moveToFirst();
+
+        if (resultSet.getInt (NOTIF_COL_INDEX) > 0)
+        {
+            ret = true;
+        }
+
+        return ret;
     }
 
     public void resetDatabase ()
