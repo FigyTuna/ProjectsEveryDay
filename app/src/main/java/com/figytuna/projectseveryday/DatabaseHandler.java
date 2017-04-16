@@ -47,7 +47,7 @@ public class DatabaseHandler {
         if (resultSet.getCount () < 1)
         {
             db.execSQL ("INSERT INTO " + SINGLE_VALUE_TABLE + " VALUES(" + DEFAULT_ID + ", "
-                    + DEFAULT_MINUTE + ", " + DEFAULT_HOUR + ", " + 0 + ");");
+                    + DEFAULT_MINUTE + ", " + DEFAULT_HOUR + ", " + 1 + ");");
         }
     }
 

@@ -55,9 +55,11 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.resetDatabase:
                 new DatabaseHandler(getApplicationContext()).resetDatabase();
+                return true;
             case R.id.editProjects:
                 Intent nextActivity = new Intent (this, ProjectsActivity.class);
                 startActivity(nextActivity);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

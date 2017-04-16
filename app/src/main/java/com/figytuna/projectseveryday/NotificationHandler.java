@@ -7,6 +7,7 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 
 import java.util.Calendar;
 
@@ -33,6 +34,8 @@ public class NotificationHandler {
                     && notif_cal.get (Calendar.MINUTE) <= current_cal.get (Calendar.MINUTE)) {
                 notif_cal.add(Calendar.DATE, 1);
             }
+
+            Log.v ("Setting alarm", "Hour: " + notif_cal.get(Calendar.HOUR_OF_DAY) + " Minute: " + notif_cal.get (Calendar.MINUTE) + " Date: " + notif_cal.get (Calendar.DATE) + " Today: " + current_cal.get (Calendar.DATE));
 
             alarmManager.set (AlarmManager.RTC_WAKEUP, notif_cal.getTimeInMillis(), pendingIntent);
         }
