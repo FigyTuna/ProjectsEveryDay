@@ -18,24 +18,22 @@ public class MissedNotificationReciever extends BroadcastReceiver {
 
     private void notifyMissed (Context context)
     {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            NotificationCompat.Builder missedNotif = new NotificationCompat.Builder(context);
-            missedNotif.setSmallIcon(R.drawable.ic_stat_name)
-                    .setContentTitle ("Projects")
-                    .setContentText ("Notification")
-                    .setAutoCancel(true)
-                    .setVibrate (new long[] {300, 300});
+        NotificationCompat.Builder missedNotif = new NotificationCompat.Builder(context);
+        missedNotif.setSmallIcon(R.drawable.ic_stat_name)
+                .setContentTitle ("Projects")
+                .setContentText ("Notification")
+                .setAutoCancel(true)
+                .setVibrate (new long[] {300, 300});
 
-            Intent missedIntent = new Intent (context, MainActivity.class);
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-            stackBuilder.addParentStack(MainActivity.class);
+        Intent missedIntent = new Intent (context, MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addParentStack(MainActivity.class);
 
-            stackBuilder.addNextIntent(missedIntent);
-            PendingIntent missedPendingIntent = stackBuilder.getPendingIntent((int) System.currentTimeMillis(), PendingIntent.FLAG_UPDATE_CURRENT);
-            missedNotif.setContentIntent (missedPendingIntent);
+        stackBuilder.addNextIntent(missedIntent);
+        PendingIntent missedPendingIntent = stackBuilder.getPendingIntent((int) System.currentTimeMillis(), PendingIntent.FLAG_UPDATE_CURRENT);
+        missedNotif.setContentIntent (missedPendingIntent);
 
-            NotificationManager notifManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            notifManager.notify (0, missedNotif.build ());
-        }
+        NotificationManager notifManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notifManager.notify (0, missedNotif.build ());
     }
 }

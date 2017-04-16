@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.chooseTime:
                 chooseTime ();
                 return true;
+            case R.id.resetDatabase:
+                new DatabaseHandler(getApplicationContext()).resetDatabase();
             default:
                 return super.onOptionsItemSelected(item);
         }
