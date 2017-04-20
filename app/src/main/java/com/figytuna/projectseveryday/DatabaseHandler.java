@@ -10,8 +10,8 @@ import java.util.Calendar;
 public class DatabaseHandler {
 
     private static final String DATABASE_NAME = "ped_db";
-    private static final String SINGLE_VALUE_TABLE = "single_value_table";
 
+    private static final String SINGLE_VALUE_TABLE = "single_value_table";
     private static final String ID_COLUMN = "id_col";
     private static final int ID_COL_INDEX = 0;
     private static final String MINUTE_COLUMN = "minute_col";
@@ -24,6 +24,16 @@ public class DatabaseHandler {
     private static final int DEFAULT_ID = 1;
     private static final int DEFAULT_MINUTE = 0;
     private static final int DEFAULT_HOUR = 12;
+
+    private static final String PROJECTS_TABLE = "projects_table";
+    private static final String PROJECT_TITLE_COLUM = "project_title_col";
+    private static final int PROJECT_COL_INDEX = 1;
+
+    private static final String ENTRY_TABLE = "entry_table";
+    private static final String ENTRY_PROJECT_COLUMN = "project_id_col";
+    private static final int ENTRY_PROJECT_INDEX = 1;
+    private static final String ENTRY_DATE_COLUMN = "date_col";
+    private static final int ENTRY_DATE_INDEX = 2;
 
     private SQLiteDatabase db;
 
