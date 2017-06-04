@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">Projects Every Day</string>
-    <string name="confirm_button">Confirm</string>
-    <string name="choose_time">Set Notification Time</string>
+    <string name="sToggleNotification">Notification</string>
+    <string name="sChooseTime">Notification Time</string>
+    <string name="sResetDatabase">Reset Everything!</string>
+    <string name="sSettings">Settings</string>
+    <string name="sEditProjects">Edit List of Projects</string>
+
+    <string name="sDatabaseResetConfirmation">Are you sure you want to reset all data?</string>
 </resources>

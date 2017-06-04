@@ -3,15 +3,9 @@
 
     <item
         android:id="@+id/settings"
-        android:title="Settings"/>
-    <item
-        android:id="@+id/chooseTime"
-        android:title="Set Notify Time"/>
+        android:title="@string/sSettings"/>
     <item
         android:id="@+id/editProjects"
-        android:title="Edit Projects"/>
-    <item
-        android:id="@+id/resetDatabase"
-        android:title="!! Reset !!"/>
+        android:title="@string/sEditProjects"/>
 
 </menu>

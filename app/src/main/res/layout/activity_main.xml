@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/projectSpinner"
             android:layout_centerHorizontal="true"
-            android:text="@string/confirm_button" />
+            android:text="temp" />
 
         <ScrollView
             android:layout_width="match_parent"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.figytuna.projectseveryday">
+          package="com.figytuna.projectseveryday">
 
     <application
         android:allowBackup="true"
@@ -11,18 +11,20 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
         <receiver
             android:name=".MissedNotificationReciever"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"/>
 
-        <activity android:name=".ProjectsActivity"></activity>
+        <activity android:name=".ProjectsActivity"/>
+        <activity android:name=".SettingsActivity">
+        </activity>
     </application>
 
 </manifest>
