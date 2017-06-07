@@ -7,4 +7,11 @@
     <string name="sEditProjects">Edit List of Projects</string>
 
     <string name="sDatabaseResetConfirmation">Are you sure you want to reset all data?</string>
+
+    <string name="sTempRenameButton">Rename</string>
+    <string name="sTempDeleteButton">Delete</string>
+
+    <string name="sRenameProjectAlertTitle">Rename Project</string>
+    <string name="sDeleteProjectAlertTitle">Delete Project</string>
+    <string name="sDeleteProjectAlertBody">Are you sure you want to delete this project and all of the times associated?</string>
 </resources>
