@@ -9,6 +9,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class DatabaseHandler {
 
@@ -35,10 +36,14 @@ public class DatabaseHandler {
   private static final int PROJECT_COL_INDEX = 1;
 
   private static final String ENTRY_TABLE = "entry_table";
-  private static final String ENTRY_PROJECT_COLUMN = "project_id_col";
-  private static final int ENTRY_PROJECT_INDEX = 1;
   private static final String ENTRY_DATE_COLUMN = "date_col";
-  private static final int ENTRY_DATE_INDEX = 2;
+  private static final int ENTRY_DATE_INDEX = 1;
+  private static final String ENTRY_PROJECT_COLUMN = "project_id_col";
+  private static final int ENTRY_PROJECT_INDEX = 2;
+  private static final String ENTRY_HOUR_COLUMN = "hour_col";
+  private static final int ENTRY_HOUR_INDEX = 3;
+  private static final String ENTRY_MINUTE_COLUMN = "minute_col";
+  private static final int ENTRY_MINUTE_INDEX = 4;
 
   private SQLiteDatabase db;
 
@@ -72,6 +77,21 @@ public class DatabaseHandler {
         + PROJECTS_TABLE + "("
         + ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT, "
         + PROJECT_TITLE_COLUM + " VARCHAR (" + DEFAULT_MAX_LENGTH + ")"
+        + ");");
+  }
+
+  private void entryTable ()
+  {
+    projectsTable();
+
+    db.execSQL ("CREATE TABLE IF NOT EXISTS "
+        + ENTRY_TABLE + "("
+        + ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+        + ENTRY_DATE_COLUMN + " VARCHAR"
+        + ENTRY_PROJECT_COLUMN + " INT,"
+        + ENTRY_HOUR_COLUMN + " INT,"
+        + ENTRY_MINUTE_COLUMN + " INT,"
+        + " FOREIGN KEY (" + ENTRY_PROJECT_COLUMN + ") REFERENCES " + PROJECTS_TABLE + " (" + ID_COLUMN + "),"
         + ");");
   }
 
@@ -168,6 +188,19 @@ public class DatabaseHandler {
     return project;
   }
 
+  private DBProject getProject (int id)
+  {
+    projectsTable();
+
+    Cursor resultSet = db.rawQuery("SELECT * FROM " + PROJECTS_TABLE + " WHERE " + ID_COLUMN + " = " + id + ";" ,null);
+    resultSet.moveToFirst();
+
+    DBProject project = new DBProject(this, resultSet.getInt(ID_COL_INDEX),
+        resultSet.getString(PROJECT_COL_INDEX));
+
+    return project;
+  }
+
   public ArrayList<DBProject> getProjects()
   {
     ArrayList<DBProject> list = new ArrayList<DBProject>();
@@ -178,11 +211,41 @@ public class DatabaseHandler {
 
     for (int i = 0; i < resultSet.getCount(); ++i)
     {
-      list.add(new DBProject(this, resultSet.getInt(0), resultSet.getString(1)));
+      list.add(new DBProject(this, resultSet.getInt(ID_COL_INDEX),
+          resultSet.getString(PROJECT_COL_INDEX)));
       resultSet.move(1);
     }
 
     return list;
+  }
+
+  public ArrayList<DBEntry> getEntries (Calendar cal)
+  {
+    ArrayList<DBEntry> entries = new ArrayList<DBEntry>();
+    entryTable();
+
+    Cursor resultSet = db.rawQuery ("SELECT * FROM " + ENTRY_TABLE + " WHERE " + ENTRY_DATE_COLUMN + " = \"" + getDateFormat(cal) + "\";", null);
+    resultSet.moveToFirst();
+
+    for (int i = 0; i < resultSet.getCount(); ++i)
+    {
+      entries.add(new DBEntry(this,
+          resultSet.getInt(ID_COL_INDEX),
+          cal,
+          getProject(resultSet.getInt(ID_COL_INDEX)),
+          resultSet.getInt(ENTRY_HOUR_INDEX),
+          resultSet.getInt(ENTRY_MINUTE_INDEX)));
+      resultSet.move(1);
+    }
+
+    return entries;
+  }
+
+  public static String getDateFormat (Calendar cal)
+  {
+    return cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US) + " "
+        + cal.get(Calendar.DAY_OF_MONTH) + " "
+        + cal.get(Calendar.YEAR);
   }
 
   public void resetDatabase ()

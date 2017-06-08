@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     NotificationHandler.setNotification(getApplicationContext());
     mDateButton = (Button) findViewById(R.id.btnDate);
 
-    mDateButton.setText(getDateFormat());
+    mDateButton.setText(DatabaseHandler.getDateFormat(mCalendar));
 
     //Test addListItem
     /*for (int i = 0; i < 100; ++i)
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         mCalendar.set (Calendar.YEAR, datePicker.getYear());
         mCalendar.set (Calendar.MONTH, datePicker.getMonth());
         mCalendar.set (Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
-        mDateButton.setText(getDateFormat());
+        mDateButton.setText(DatabaseHandler.getDateFormat(mCalendar));
       }
     });
 
@@ -101,18 +101,11 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public void onClick(DialogInterface dialog, int which) {
         mCalendar = Calendar.getInstance();
-        mDateButton.setText(getDateFormat());
+        mDateButton.setText(DatabaseHandler.getDateFormat(mCalendar));
       }
     });
 
     dateDialog.show();
-  }
-
-  private String getDateFormat ()
-  {
-    return mCalendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US) + " "
-        + mCalendar.get(Calendar.DAY_OF_MONTH) + " "
-        + mCalendar.get(Calendar.YEAR);
   }
 
   /*private void addListItem (String title)
