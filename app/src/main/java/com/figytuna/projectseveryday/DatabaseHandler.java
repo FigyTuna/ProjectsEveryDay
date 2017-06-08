@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -178,6 +179,7 @@ public class DatabaseHandler {
     for (int i = 0; i < resultSet.getCount(); ++i)
     {
       list.add(new DBProject(this, resultSet.getInt(0), resultSet.getString(1)));
+      resultSet.move(1);
     }
 
     return list;

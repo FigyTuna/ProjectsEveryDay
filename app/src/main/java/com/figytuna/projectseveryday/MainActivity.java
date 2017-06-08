@@ -1,20 +1,26 @@
 package com.figytuna.projectseveryday;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.ViewGroup;
+import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
+
+import java.util.Calendar;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
   private TableLayout projectListLayout;
+  private Calendar mCalendar;
+  private Button mDateButton;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -22,16 +28,20 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
 
+    mCalendar = Calendar.getInstance();
 
-    projectListLayout = (TableLayout) findViewById(R.id.projectListLayout);
+    //projectListLayout = (TableLayout) findViewById(R.id.projectListLayout);
 
     NotificationHandler.setNotification(getApplicationContext());
+    mDateButton = (Button) findViewById(R.id.btnDate);
+
+    mDateButton.setText(getDateFormat());
 
     //Test addListItem
-    for (int i = 0; i < 100; ++i)
+    /*for (int i = 0; i < 100; ++i)
     {
       addListItem ("List Item #" + i);
-    }
+    }*/
   }
 
   @Override
@@ -46,12 +56,6 @@ public class MainActivity extends AppCompatActivity {
   public boolean onOptionsItemSelected (MenuItem item)
   {
     switch (item.getItemId()) {
-      /*case R.id.chooseTime:
-        chooseTime ();
-        return true;
-      case R.id.resetDatabase:
-        new DatabaseHandler(getApplicationContext()).resetDatabase();
-        return true;*/
       case R.id.settings:
         Intent settingsActivity = new Intent (this, SettingsActivity.class);
         startActivity(settingsActivity);
@@ -63,10 +67,55 @@ public class MainActivity extends AppCompatActivity {
       default:
         return super.onOptionsItemSelected(item);
     }
-
   }
 
-  private void addListItem (String title)
+  public void onClickDate (View view)
+  {
+    AlertDialog.Builder dateDialog = new AlertDialog.Builder(this);
+    final DatePicker datePicker = new DatePicker(this);
+
+    datePicker.init(mCalendar.get(Calendar.YEAR),
+        mCalendar.get(Calendar.MONTH),
+        mCalendar.get(Calendar.DAY_OF_MONTH),
+        new DatePicker.OnDateChangedListener(){
+
+      @Override
+      public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        //Do Nothing
+      }
+    });
+
+    dateDialog.setView(datePicker);
+
+    dateDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        mCalendar.set (Calendar.YEAR, datePicker.getYear());
+        mCalendar.set (Calendar.MONTH, datePicker.getMonth());
+        mCalendar.set (Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
+        mDateButton.setText(getDateFormat());
+      }
+    });
+
+    dateDialog.setNegativeButton("Today", new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        mCalendar = Calendar.getInstance();
+        mDateButton.setText(getDateFormat());
+      }
+    });
+
+    dateDialog.show();
+  }
+
+  private String getDateFormat ()
+  {
+    return mCalendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US) + " "
+        + mCalendar.get(Calendar.DAY_OF_MONTH) + " "
+        + mCalendar.get(Calendar.YEAR);
+  }
+
+  /*private void addListItem (String title)
   {
     TableRow addTableRow = new TableRow(this);
     addTableRow.setOrientation (TableRow.VERTICAL);
@@ -84,5 +133,5 @@ public class MainActivity extends AppCompatActivity {
             ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
     addTextView.setLayoutParams(rowWidgetParams);
     addTableRow.addView(addTextView);
-  }
+  }*/
 }

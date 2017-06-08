@@ -5,9 +5,11 @@
     <string name="sResetDatabase">Reset Everything!</string>
     <string name="sSettings">Settings</string>
     <string name="sEditProjects">Edit List of Projects</string>
+    <string name="sAddEntryButton">Add Project For Today</string>
 
     <string name="sDatabaseResetConfirmation">Are you sure you want to reset all data?</string>
 
+    <string name="sAddButton">New Project</string>
     <string name="sTempRenameButton">Rename</string>
     <string name="sTempDeleteButton">Delete</string>
 

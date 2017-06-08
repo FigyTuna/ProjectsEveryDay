@@ -1,5 +1,7 @@
 package com.figytuna.projectseveryday;
 
+import android.util.Log;
+
 public class DBProject {
 
   DatabaseHandler mDb;
