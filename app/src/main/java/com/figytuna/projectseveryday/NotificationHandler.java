@@ -13,9 +13,6 @@ import java.util.Calendar;
 
 public class NotificationHandler {
 
-  private static final String NOTIFICATION_TITLE = "Projects Every Day";
-  private static final String NOTIFICATION_BODY = "You haven't worked on a project yet today!";
-
   public static void setNotification (Context context)
   {
     DatabaseHandler database = new DatabaseHandler(context);
@@ -43,11 +40,11 @@ public class NotificationHandler {
   {
     DatabaseHandler database = new DatabaseHandler(context);
 
-    if (database.getNotifEnabled()) {
+    if (database.getNotifEnabled() && database.getEntries(Calendar.getInstance()).size() == 0) {
       NotificationCompat.Builder missedNotif = new NotificationCompat.Builder(context);
       missedNotif.setSmallIcon(R.drawable.ic_stat_name)
-        .setContentTitle (NOTIFICATION_TITLE)
-        .setContentText (NOTIFICATION_BODY)
+        .setContentTitle (context.getString(R.string.sNotificationTitle))
+        .setContentText (context.getString(R.string.sNotificationBody))
         .setAutoCancel(true)
         .setVibrate (new long[] {300, 300});
 
