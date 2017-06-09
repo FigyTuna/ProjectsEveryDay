@@ -4,9 +4,9 @@ import android.util.Log;
 
 public class DBProject {
 
-  DatabaseHandler mDb;
-  long mId;
-  String mTitle;
+  private DatabaseHandler mDb;
+  private long mId;
+  private String mTitle;
 
   public DBProject(DatabaseHandler db, long id, String title)
   {
@@ -33,7 +33,7 @@ public class DBProject {
 
   public void delete ()
   {
-    mDb.deleteProject(this);
+    mDb.delete(this);
     mId = -1;
     mTitle = "";
   }

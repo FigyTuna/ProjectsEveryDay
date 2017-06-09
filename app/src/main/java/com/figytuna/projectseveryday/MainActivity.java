@@ -1,5 +1,6 @@
 package com.figytuna.projectseveryday;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
@@ -11,37 +12,44 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.TableLayout;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.Calendar;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-  private TableLayout projectListLayout;
+  private DatabaseHandler mDb;
   private Calendar mCalendar;
   private Button mDateButton;
+  private EntryListAdapter mAdapter;
+  private ListView mListView;
+
+  private Context mContext;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+  }
 
-
+  @Override
+  public void onStart ()
+  {
+    super.onStart();
+    mDb = new DatabaseHandler(this);
     mCalendar = Calendar.getInstance();
-
-    //projectListLayout = (TableLayout) findViewById(R.id.projectListLayout);
 
     NotificationHandler.setNotification(getApplicationContext());
     mDateButton = (Button) findViewById(R.id.btnDate);
 
     mDateButton.setText(DatabaseHandler.getDateFormat(mCalendar));
 
-    //Test addListItem
-    /*for (int i = 0; i < 100; ++i)
-    {
-      addListItem ("List Item #" + i);
-    }*/
+    mListView = (ListView) findViewById(R.id.list_entries);
+    mAdapter = new EntryListAdapter(this, mDb.getEntries(mCalendar));
+    mListView.setAdapter(mAdapter);
+
+    mContext = this;
   }
 
   @Override
@@ -94,6 +102,8 @@ public class MainActivity extends AppCompatActivity {
         mCalendar.set (Calendar.MONTH, datePicker.getMonth());
         mCalendar.set (Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
         mDateButton.setText(DatabaseHandler.getDateFormat(mCalendar));
+        mAdapter = new EntryListAdapter(mContext, mDb.getEntries(mCalendar));
+        mListView.setAdapter(mAdapter);
       }
     });
 
@@ -102,29 +112,24 @@ public class MainActivity extends AppCompatActivity {
       public void onClick(DialogInterface dialog, int which) {
         mCalendar = Calendar.getInstance();
         mDateButton.setText(DatabaseHandler.getDateFormat(mCalendar));
+        mAdapter = new EntryListAdapter(mContext, mDb.getEntries(mCalendar));
+        mListView.setAdapter(mAdapter);
       }
     });
 
     dateDialog.show();
   }
 
-  /*private void addListItem (String title)
+  public void onClickAdd (View view)
   {
-    TableRow addTableRow = new TableRow(this);
-    addTableRow.setOrientation (TableRow.VERTICAL);
-    TableRow.LayoutParams rowContainerParams
-            = new TableRow.LayoutParams (ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
-    addTableRow.setLayoutParams (rowContainerParams);
-    projectListLayout.addView(addTableRow);
-
-    TextView addTextView = new TextView (this);
-    addTextView.setText(title);
-    addTextView.setGravity(Gravity.CENTER);
-    TableRow.LayoutParams rowWidgetParams
-            = new TableRow.LayoutParams (ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
-    addTextView.setLayoutParams(rowWidgetParams);
-    addTableRow.addView(addTextView);
-  }*/
+    if (mDb.getProjects().size() > 0) {
+      DBEntry entry = mDb.getEmptyEntry(mCalendar);
+      mAdapter.add(entry);
+    }
+    else
+    {
+      Toast error = new Toast (this);
+      error.makeText(this, "You must add a project first.", Toast.LENGTH_SHORT).show();
+    }
+  }
 }

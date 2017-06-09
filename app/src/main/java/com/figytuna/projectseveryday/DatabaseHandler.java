@@ -87,11 +87,11 @@ public class DatabaseHandler {
     db.execSQL ("CREATE TABLE IF NOT EXISTS "
         + ENTRY_TABLE + "("
         + ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-        + ENTRY_DATE_COLUMN + " VARCHAR"
+        + ENTRY_DATE_COLUMN + " VARCHAR,"
         + ENTRY_PROJECT_COLUMN + " INT,"
         + ENTRY_HOUR_COLUMN + " INT,"
         + ENTRY_MINUTE_COLUMN + " INT,"
-        + " FOREIGN KEY (" + ENTRY_PROJECT_COLUMN + ") REFERENCES " + PROJECTS_TABLE + " (" + ID_COLUMN + "),"
+        + " FOREIGN KEY (" + ENTRY_PROJECT_COLUMN + ") REFERENCES " + PROJECTS_TABLE + " (" + ID_COLUMN + ")"
         + ");");
   }
 
@@ -161,19 +161,47 @@ public class DatabaseHandler {
     db.update(PROJECTS_TABLE, values, filter, null);
   }
 
-  public void deleteProject (DBProject project)
+  public void pushChanges (DBEntry entry)
   {
-    String insertSQL;
+    String filter = ID_COLUMN + "=" + entry.getId ();
+    ContentValues values = new ContentValues();
+    values.put (ENTRY_HOUR_COLUMN, entry.getHour());
+    values.put (ENTRY_MINUTE_COLUMN, entry.getMinute());
+    values.put (ENTRY_PROJECT_COLUMN, entry.getProject().getId());
+    db.update (ENTRY_TABLE, values, filter, null);
+  }
+
+  public void delete (DBProject project)
+  {
+    String deleteSQL;
+    SQLiteStatement stmt;
+
+    entryTable();
+
+    deleteSQL = "DELETE FROM " + ENTRY_TABLE + " WHERE " + ENTRY_PROJECT_COLUMN + " = ?;";
+    stmt = db.compileStatement(deleteSQL);
+    stmt.bindLong (1, project.getId());
+    stmt.executeUpdateDelete();
+
+    deleteSQL = "DELETE FROM " + PROJECTS_TABLE + " WHERE " + ID_COLUMN + " = ?;";
+    stmt = db.compileStatement(deleteSQL);
+    stmt.bindLong (1, project.getId());
+    stmt.executeUpdateDelete();
+  }
+
+  public void delete (DBEntry entry)
+  {
+    String deleteSQL;
     SQLiteStatement stmt;
 
     projectsTable();
 
-    insertSQL = "DELETE FROM " + PROJECTS_TABLE + " WHERE " + ID_COLUMN + " = ?;";
-    stmt = db.compileStatement(insertSQL);
+    deleteSQL = "DELETE FROM " + ENTRY_TABLE + " WHERE " + ID_COLUMN + " = ?;";
+    stmt = db.compileStatement(deleteSQL);
 
-    stmt.bindLong (1, project.getId());
+    stmt.bindLong (1, entry.getId());
 
-    stmt.executeInsert();
+    stmt.executeUpdateDelete();
   }
 
   public DBProject getEmptyProject()
@@ -191,12 +219,20 @@ public class DatabaseHandler {
   private DBProject getProject (int id)
   {
     projectsTable();
+    DBProject project;
 
     Cursor resultSet = db.rawQuery("SELECT * FROM " + PROJECTS_TABLE + " WHERE " + ID_COLUMN + " = " + id + ";" ,null);
     resultSet.moveToFirst();
 
-    DBProject project = new DBProject(this, resultSet.getInt(ID_COL_INDEX),
-        resultSet.getString(PROJECT_COL_INDEX));
+    if (resultSet.getCount () > 0) {
+      project = new DBProject(this, resultSet.getInt(ID_COL_INDEX),
+          resultSet.getString(PROJECT_COL_INDEX));
+    }
+    else
+    {
+      project = getEmptyProject();
+      project.rename ("ERROR: Missing Project");
+    }
 
     return project;
   }
@@ -219,6 +255,25 @@ public class DatabaseHandler {
     return list;
   }
 
+  public DBEntry getEmptyEntry (Calendar cal)
+  {
+    entryTable();
+    ContentValues values = new ContentValues();
+
+    String date = getDateFormat(cal);
+    DBProject project = getProjects().get(0);//Make sure projects aren't empty
+
+    values.put (ENTRY_DATE_COLUMN, date);
+    values.put (ENTRY_PROJECT_COLUMN, project.getId());
+    values.put (ENTRY_HOUR_COLUMN, 0);
+    values.put (ENTRY_MINUTE_COLUMN, 0);
+    long id = db.insert (ENTRY_TABLE, null, values);
+
+    DBEntry entry = new DBEntry(this, id, cal, project, 0, 0);
+
+    return entry;
+  }
+
   public ArrayList<DBEntry> getEntries (Calendar cal)
   {
     ArrayList<DBEntry> entries = new ArrayList<DBEntry>();
@@ -232,7 +287,7 @@ public class DatabaseHandler {
       entries.add(new DBEntry(this,
           resultSet.getInt(ID_COL_INDEX),
           cal,
-          getProject(resultSet.getInt(ID_COL_INDEX)),
+          getProject(resultSet.getInt(ENTRY_PROJECT_INDEX)),
           resultSet.getInt(ENTRY_HOUR_INDEX),
           resultSet.getInt(ENTRY_MINUTE_INDEX)));
       resultSet.move(1);
@@ -251,6 +306,7 @@ public class DatabaseHandler {
   public void resetDatabase ()
   {
     db.execSQL("DROP TABLE IF EXISTS " + SINGLE_VALUE_TABLE + ";");
+    db.execSQL("DROP TABLE IF EXISTS " + ENTRY_TABLE + ";");
     db.execSQL("DROP TABLE IF EXISTS " + PROJECTS_TABLE + ";");
   }
 }

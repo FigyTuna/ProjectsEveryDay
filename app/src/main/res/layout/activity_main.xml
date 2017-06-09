@@ -12,16 +12,18 @@
         android:onClick="onClickDate"/>
 
     <ListView
+        android:id="@+id/list_entries"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/btnDate"
-        android:layout_above="@+id/btnAddEntry"/>
+        android:layout_above="@+id/btnAddEntry"
+        android:layout_below="@+id/btnDate"/>
 
     <Button
         android:id="@+id/btnAddEntry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:onClick="onClickAdd"
         android:text="@string/sAddEntryButton"/>
 </RelativeLayout>
 

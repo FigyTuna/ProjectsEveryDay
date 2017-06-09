@@ -66,6 +66,7 @@ public class ProjectsListAdapter extends ArrayAdapter<DBProject> {
     input.setFilters (new InputFilter[] { new InputFilter.LengthFilter (
         DatabaseHandler.DEFAULT_MAX_LENGTH) });
     input.setSingleLine();
+    input.setText (project.getTitle());
 
     renameDialog.setTitle(R.string.sRenameProjectAlertTitle);
     renameDialog.setView(input);
