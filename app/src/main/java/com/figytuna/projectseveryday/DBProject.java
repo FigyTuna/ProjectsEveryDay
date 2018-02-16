@@ -1,18 +1,20 @@
 package com.figytuna.projectseveryday;
 
-import android.util.Log;
-
 public class DBProject {
 
   private DatabaseHandler mDb;
   private long mId;
   private String mTitle;
+  private int mTotalHours;
+  private int mTotalMinutes;
 
-  public DBProject(DatabaseHandler db, long id, String title)
+  public DBProject(DatabaseHandler db, long id, String title, int totalHours, int totalMinutes)
   {
     mDb = db;
     mId = id;
     mTitle = title;
+    mTotalHours = totalHours;
+    mTotalMinutes = totalMinutes;
   }
 
   public long getId()
@@ -24,6 +26,10 @@ public class DBProject {
   {
     return mTitle;
   }
+
+  public int getTotalHours() { return mTotalHours + (mTotalMinutes / 60); }
+
+  public int getTotalMinutes() { return mTotalMinutes % 60; }
 
   public void rename (String title)
   {

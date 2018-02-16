@@ -27,4 +27,15 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Menu"
         android:textColor="@color/colorText"
         android:textSize="24sp"/>
+
+    <TextView
+        android:id="@+id/project_item_total"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:text="12hr 34min"
+        android:textAlignment="viewStart"
+        android:textAppearance="@style/TextAppearance.AppCompat.Menu"
+        android:textColor="@color/colorText"
+        android:textSize="18sp"/>
 </TableRow>

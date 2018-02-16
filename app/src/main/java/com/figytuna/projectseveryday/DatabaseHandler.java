@@ -67,7 +67,7 @@ public class DatabaseHandler {
     if (resultSet.getCount () < 1)
     {
       db.execSQL ("INSERT INTO " + SINGLE_VALUE_TABLE + " VALUES(" + DEFAULT_ID + ", "
-          + DEFAULT_MINUTE + ", " + DEFAULT_HOUR + ", " + 1 + ");");
+          + DEFAULT_MINUTE + ", " + DEFAULT_HOUR + ", 1);");
     }
   }
 
@@ -211,7 +211,7 @@ public class DatabaseHandler {
     values.put(PROJECT_TITLE_COLUM, "");
     long id = db.insert(PROJECTS_TABLE, null, values);
 
-    DBProject project = new DBProject(this, id, "");
+    DBProject project = new DBProject(this, id, "", 0, 0);
 
     return project;
   }
@@ -225,8 +225,13 @@ public class DatabaseHandler {
     resultSet.moveToFirst();
 
     if (resultSet.getCount () > 0) {
-      project = new DBProject(this, resultSet.getInt(ID_COL_INDEX),
-          resultSet.getString(PROJECT_COL_INDEX));
+      project = new DBProject(
+          this,
+          resultSet.getInt(ID_COL_INDEX),
+          resultSet.getString(PROJECT_COL_INDEX),
+          getTotalHours(resultSet.getInt(ID_COL_INDEX)),
+          getTotalMinutes(resultSet.getInt(ID_COL_INDEX))
+      );
     }
     else
     {
@@ -247,12 +252,31 @@ public class DatabaseHandler {
 
     for (int i = 0; i < resultSet.getCount(); ++i)
     {
-      list.add(new DBProject(this, resultSet.getInt(ID_COL_INDEX),
-          resultSet.getString(PROJECT_COL_INDEX)));
+      list.add(new DBProject(
+          this,
+          resultSet.getInt(ID_COL_INDEX),
+          resultSet.getString(PROJECT_COL_INDEX),
+          getTotalHours(resultSet.getInt(ID_COL_INDEX)),
+          getTotalMinutes(resultSet.getInt(ID_COL_INDEX)))
+      );
       resultSet.move(1);
     }
 
     return list;
+  }
+
+  private int getTotalHours (int projectId)
+  {
+    Cursor resultSet = db.rawQuery("SELECT SUM(" + ENTRY_HOUR_COLUMN + ") FROM " + ENTRY_TABLE + " WHERE " + ENTRY_PROJECT_COLUMN + " = " + projectId + ";", null);
+    resultSet.moveToFirst();
+    return resultSet.getInt(0);
+  }
+
+  private int getTotalMinutes (int projectId)
+  {
+    Cursor resultSet = db.rawQuery("SELECT SUM(" + ENTRY_MINUTE_COLUMN + ") FROM " + ENTRY_TABLE + " WHERE " + ENTRY_PROJECT_COLUMN + " = " + projectId + ";", null);
+    resultSet.moveToFirst();
+    return resultSet.getInt(0);
   }
 
   public DBEntry getEmptyEntry (Calendar cal)

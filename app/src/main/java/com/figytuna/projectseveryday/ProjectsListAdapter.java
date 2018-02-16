@@ -34,8 +34,10 @@ public class ProjectsListAdapter extends ArrayAdapter<DBProject> {
     }
 
     TextView titleView = (TextView) convertView.findViewById(R.id.project_item_title);
+    TextView totalsView = (TextView) convertView.findViewById(R.id.project_item_total);
 
     titleView.setText(project.getTitle());
+    totalsView.setText("   " + project.getTotalHours() + "hr " + project.getTotalMinutes() + "min");
 
     Button renameButton = (Button) convertView.findViewById(R.id.project_item_rename);
     Button deleteButton = (Button) convertView.findViewById(R.id.project_item_delete);
